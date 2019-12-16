@@ -7,7 +7,7 @@ int main()
     srand(time(0));
     string ht;
     int sel , s , bat , rand() , bow , ttl=0 , ttl1=0,total1=0,total2=0;
-    cout<<"            *************************   WELCOME TO THEtail CRICKET  ***************************";
+    cout<<"            *************************   WELCOME TO THE CRICKET  ***************************";
     cout<<"\n\n\n                             **************ITS 2 OVER MATCH ONLY************\n\n";
     cout<<"CHOOSE HEAD OR TAIL:";
     cin>>ht;
