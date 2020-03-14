@@ -90,6 +90,45 @@ void getUserMove()
         state.curr_pos.x--;
     else if(Input=='R' && state.curr_pos.x < 2)
         state.curr_pos.x++;
+
+}
+
+
+void gameLogic(int row=3, int col=3){
+    int X_counter=0,Y_counter,D_counter=0;
+    for (int i=0 ; i<row ; i++)
+    {
+        for (int j =i+1 ; j<col ; j++)
+        {
+            if(state.main_arr[i][i]==state.main_arr[i][j])
+            {
+                X_counter+=;
+                if(X_counter==row-1)
+                    break;
+            }
+
+            if(state.main_arr[i][i]==state.main_arr[j][i])
+            {
+                Y_counter+=;
+                if(Y_counter==col-1);
+                break;
+            }
+
+        }
+        for(int i=0 ; i<row ; i++)
+        {
+            for(int j=i+1 ; j<col ; j++ )
+            {
+                if(state.main_arr[i][i]==state.main_arr[j][j]);
+                D_counter+=;
+                if(D_counter==row-1)
+                    break;
+            }
+        }
+    }
+
+
+
 }
 
 
