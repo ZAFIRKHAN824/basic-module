@@ -11,16 +11,17 @@ struct State {
 
 State initialState = {
     {
-        {'X', '0', '0'},
-        {' ', '0', ' '},
-        {' ', 'X', ' '},
+        {' ', ' ', ' '},
+        {' ', ' ', ' '},
+        {' ', ' ', ' '},
     },
     0,
-    {1, 1},
+    {0, 0},
     false,
 };
 
 State state = initialState;
+
 
 char GetArrowKeysInput()
 {
@@ -79,6 +80,18 @@ void stateArray2Board()
         }
     }
 }
+
+char getCurrMarker(bool currPlayer){
+    if(state.curr_player==0)
+    {
+        return PLAYER_1_MARKER;
+    }
+    else
+    {
+        return PLAYER_2_MARKER;
+    }
+}
+
 void getUserMove()
 {
     char Input=GetArrowKeysInput();
@@ -90,6 +103,11 @@ void getUserMove()
         state.curr_pos.x--;
     else if(Input=='R' && state.curr_pos.x < 2)
         state.curr_pos.x++;
+    else if(Input=='E') {
+        if(state.main_array[state.curr_pos.x][state.curr_pos.y] == ' ')
+            state.main_array[state.curr_pos.x][state.curr_pos.y]= getCurrMarker(state.curr_player);
+    }
+
 }
 
 
@@ -98,7 +116,7 @@ int main(){
     while(state.game_over == false)
     {
         stateArray2Board();
-        printMarkerOnBoard('P', state.curr_pos.x, state.curr_pos.y);
+        printMarkerOnBoard(getCurrMarker(state.curr_player), state.curr_pos.x, state.curr_pos.y);
         getUserMove();
     }
 }
