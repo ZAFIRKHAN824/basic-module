@@ -11,16 +11,17 @@ struct State {
 
 State initialState = {
     {
-        {'X', '0', '0'},
-        {' ', '0', ' '},
-        {' ', 'X', ' '},
+        {EMPTY_MARKER, EMPTY_MARKER, EMPTY_MARKER},
+        {EMPTY_MARKER, EMPTY_MARKER, EMPTY_MARKER},
+        {EMPTY_MARKER, EMPTY_MARKER, EMPTY_MARKER},
     },
     0,
-    {1, 1},
+    {0, 0},
     false,
 };
 
 State state = initialState;
+
 
 char GetArrowKeysInput()
 {
@@ -75,10 +76,118 @@ void stateArray2Board()
 {
     for(int r=0; r<3; ++r){
         for(int c=0; c<3; ++c){
-            printMarkerOnBoard(state.main_array[r][c], r, c);
+            printMarkerOnBoard(state.main_array[r][c], c, r);
         }
     }
 }
+
+char getCurrMarker(bool currPlayer){
+    if(state.curr_player==0)
+    {
+        return PLAYER_1_MARKER;
+    }
+    else
+    {
+        return PLAYER_2_MARKER;
+    }
+}
+
+void gameLogic(int row=3, int col=3){
+    bool isDrawn = true;
+
+    //for rows
+    for(int r=0; r<row; ++r){
+        char firstMarker = state.main_array[r][0];
+        int hCounter = 0;
+        for(int c=0; c<col; ++c){
+            if(state.main_array[r][c] == EMPTY_MARKER) {
+                isDrawn = false;
+                break;
+            }
+            else if(firstMarker != state.main_array[r][c]) break;
+            else hCounter++;
+        }
+        if(hCounter == col){
+            cout << "Row " << r << r << r << " filled!";
+            state.game_over = true;
+            return;
+        }
+    }
+
+    //for cols
+    for(int c=0; c<col; ++c){
+        char firstMarker = state.main_array[0][c];
+        int vCounter = 0;
+        for(int r=0; r<row; ++r){
+            if(state.main_array[r][c] == EMPTY_MARKER) {
+                isDrawn = false;
+                break;
+            }
+            else if(firstMarker != state.main_array[r][c]) break;
+            else vCounter++;
+        }
+        if(vCounter == row){
+            cout << "Column " << c << " filled!";
+            state.game_over = true;
+            return;
+        }
+    }
+
+     char firstMarker = state.main_array[1][1];
+
+     //for left diagonal
+     int ldCounter = 0;
+     for(int r=0; r<row; ++r){
+        if(state.main_array[r][r] == EMPTY_MARKER) {
+                isDrawn = false;
+                break;
+            }
+            else if(firstMarker != state.main_array[r][r]) break;
+            else ldCounter++;
+     }
+     if(ldCounter == row){
+            cout << "Diagonal left filled!";
+            state.game_over = true;
+            return;
+    }
+
+    //for right diagonal
+    int rdCounter = 0;
+     for(int r=0; r<row; ++r){
+        if(state.main_array[r][row-r-1] == EMPTY_MARKER) {
+                isDrawn = false;
+                break;
+            }
+            else if(firstMarker != state.main_array[r][row-r-1]) break;
+            else rdCounter++;
+     }
+     if(rdCounter == row){
+            cout << "Diagonal right filled!";
+            state.game_over = true;
+            return;
+        }
+
+    //check draw condition
+    if(isDrawn){
+        cout << "Match Drawn";
+        WriteTextAtLoc("Match Drawn", 0, 0);
+        state.game_over = true;
+        return;
+    }
+
+    state.curr_player= !state.curr_player;
+}
+
+void printArr(){
+    Locate(0, 0);
+    for(int i=0; i<3; ++i){
+        for(int j=0; j<3; ++j){
+            cout << (char)state.main_array[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 void getUserMove()
 {
     char Input=GetArrowKeysInput();
@@ -90,54 +199,23 @@ void getUserMove()
         state.curr_pos.x--;
     else if(Input=='R' && state.curr_pos.x < 2)
         state.curr_pos.x++;
-
-}
-
-
-void gameLogic(int row=3, int col=3){
-    int X_counter=0,Y_counter,D_counter=0;
-    for (int i=0 ; i<row ; i++)
-    {
-        for (int j =i+1 ; j<col ; j++)
-        {
-            if(state.main_arr[i][i]==state.main_arr[i][j])
-            {
-                X_counter+=;
-                if(X_counter==row-1)
-                    break;
-            }
-
-            if(state.main_arr[i][i]==state.main_arr[j][i])
-            {
-                Y_counter+=;
-                if(Y_counter==col-1);
-                break;
-            }
-
-        }
-        for(int i=0 ; i<row ; i++)
-        {
-            for(int j=i+1 ; j<col ; j++ )
-            {
-                if(state.main_arr[i][i]==state.main_arr[j][j]);
-                D_counter+=;
-                if(D_counter==row-1)
-                    break;
-            }
+    else if(Input=='E') {
+        if(state.main_array[state.curr_pos.y][state.curr_pos.x] == EMPTY_MARKER){
+            state.main_array[state.curr_pos.y][state.curr_pos.x]= getCurrMarker(state.curr_player);
+             gameLogic();
         }
     }
-
-
-
 }
+
 
 
 int main(){
     renderBoard();
     while(state.game_over == false)
     {
+        printArr();
         stateArray2Board();
-        printMarkerOnBoard('P', state.curr_pos.x, state.curr_pos.y);
+        printMarkerOnBoard(getCurrMarker(state.curr_player), state.curr_pos.x, state.curr_pos.y);
         getUserMove();
     }
 }
